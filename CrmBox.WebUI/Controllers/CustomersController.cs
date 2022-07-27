@@ -18,7 +18,7 @@ namespace CrmBox.WebUI.Controllers
      
         public IActionResult GetAll()
         {
-            var result = _customerService.GetAll();
+            IQueryable<Customer> result = _customerService.GetAll();
             return View(result);
         }
 

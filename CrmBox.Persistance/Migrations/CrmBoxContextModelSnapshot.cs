@@ -63,7 +63,7 @@ namespace CrmBox.Persistance.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Customers");
+                    b.ToTable("Customers", (string)null);
                 });
 #pragma warning restore 612, 618
         }

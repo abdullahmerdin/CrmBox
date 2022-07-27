@@ -88,6 +88,6 @@ app.UseAuthorization();
 app.UseRequestLocalization(((IApplicationBuilder)app).ApplicationServices.GetRequiredService<IOptions<RequestLocalizationOptions>>().Value);
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}");
+    pattern: "{controller=Customers}/{action=Add}/{id?}");
 
 app.Run();
