@@ -95,6 +95,6 @@ app.UseRequestLocalization(((IApplicationBuilder)app).ApplicationServices.GetReq
 
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}");
+    pattern: "{controller=Customers}/{action=Add}/{id?}");
 
 app.Run();

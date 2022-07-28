@@ -20,7 +20,7 @@ namespace CrmBox.Persistance.Context
         
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlServer(_configuration.GetConnectionString("Main"));
+            optionsBuilder.UseSqlServer(_configuration.GetConnectionString("Azure"));
         }
         public DbSet<Customer>? Customers { get; set; }
     }

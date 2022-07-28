@@ -21,7 +21,7 @@ namespace CrmBox.WebUI.Controllers
         [Authorize(Policy = "GetAllCustomers")]
         public IActionResult GetAllCustomers()
         {
-            var result = _customerService.GetAll();
+            IQueryable<Customer> result = _customerService.GetAll();
             return View(result);
         }
 

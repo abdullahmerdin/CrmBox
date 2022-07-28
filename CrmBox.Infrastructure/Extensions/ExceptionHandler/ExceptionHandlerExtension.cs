@@ -1,4 +1,5 @@
-﻿using CrmBox.Infrastructure.MiddleLayers;
+﻿
+using CrmBox.Infrastructure.MiddleLayers;
 using Microsoft.AspNetCore.Builder;
 
 namespace CrmBox.Infrastructure.Extensions.ExceptionHandler;

@@ -17,7 +17,7 @@ public class CrmBoxIdentityContext : IdentityDbContext<AppUser, AppRole, int>
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
-        optionsBuilder.UseSqlServer(_configuration.GetConnectionString("Identity"));
+        optionsBuilder.UseSqlServer(_configuration.GetConnectionString("Azure"));
     }
     
     protected override void OnModelCreating(ModelBuilder builder)
