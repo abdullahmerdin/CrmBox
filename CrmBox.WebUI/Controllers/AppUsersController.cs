@@ -6,12 +6,12 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace CrmBox.WebUI.Controllers
 {
-    public class AppUsersController : Controller
+    public class AppUsersController : AuthController
     {
         readonly UserManager<AppUser> _userManager;
         readonly RoleManager<AppRole> _roleManager;
 
-        public AppUsersController(UserManager<AppUser> userManager, RoleManager<AppRole> roleManager)
+        public AppUsersController(UserManager<AppUser> userManager, RoleManager<AppRole> roleManager) : base(userManager)
         {
             _userManager = userManager;
             _roleManager = roleManager;
@@ -19,30 +19,33 @@ namespace CrmBox.WebUI.Controllers
 
 
         [HttpGet]
-        public IActionResult GetAll()
+        [Authorize(Policy = "GetAllUsers")]
+        public IActionResult GetAllUsers()
         {
             var users = _userManager.Users.ToList();
             return View(users);
         }
 
         [HttpGet]
-        public IActionResult Add()
+        [Authorize(Policy = "AddUser")]
+        public IActionResult AddUser()
         {
             ViewBag.Roles = _roleManager.Roles.Select(x => new RoleWithSelectVM
             {
                 Id = x.Id,
                 Name = x.Name,
                 IsSelected = false,
-                Roles = _roleManager.Roles.ToList()
+                Claims = _roleManager.GetClaimsAsync(x).Result
             });
 
 
-            
+
             return View();
         }
 
         [HttpPost]
-        public async Task<IActionResult> Add(AddUserVM model)
+        [Authorize(Policy = "AddUser")]
+        public async Task<IActionResult> AddUser(AddUserVM model)
         {
             if (ModelState.IsValid)
             {
@@ -65,7 +68,9 @@ namespace CrmBox.WebUI.Controllers
             }
             return View(model);
         }
-        public async Task<IActionResult> Delete(int userId)
+
+        [Authorize(Policy = "DeleteUser")]
+        public async Task<IActionResult> DeleteUser(int userId)
         {
             AppUser user = await _userManager.FindByIdAsync(userId.ToString());
             await _userManager.DeleteAsync(user);

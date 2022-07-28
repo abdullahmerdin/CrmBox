@@ -7,10 +7,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Services\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\CrmBox.Core\CrmBox.Core.csproj" />
     <ProjectReference Include="..\CrmBox.Persistance\CrmBox.Persistance.csproj" />
   </ItemGroup>

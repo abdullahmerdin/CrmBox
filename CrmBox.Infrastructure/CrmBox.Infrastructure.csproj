@@ -8,7 +8,6 @@
 
   <ItemGroup>
     <Folder Include="MiddleLayers\" />
-    <Folder Include="Extensions\" />
     <Folder Include="Registrations\" />
   </ItemGroup>
 

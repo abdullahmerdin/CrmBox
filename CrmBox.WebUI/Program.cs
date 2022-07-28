@@ -1,14 +1,14 @@
-using System.Globalization;
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using CrmBox.Core.Domain.Identity;
-using CrmBox.Infrastructure.Extensions;
+using CrmBox.Infrastructure.Extensions.ExceptionHandler;
+using CrmBox.Infrastructure.Registrations;
 using CrmBox.Persistance.Context;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.Mvc.Razor;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Serilog;
+using System.Globalization;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -21,6 +21,8 @@ builder.Host.UseServiceProviderFactory(new AutofacServiceProviderFactory())
     {
         builder.RegisterModule(new CrmBox.Infrastructure.Registrations.AutofacRegistration());
     });
+
+builder.Services.AddClaimAuthorizationPolicies();
 
 //Add Serilog
 Log.Logger = new LoggerConfiguration().CreateLogger();
@@ -78,14 +80,19 @@ if (!app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
 app.UseStaticFiles();
+
 app.UseSerilogRequestLogging();
 
 app.UseRouting();
 
+app.UseAuthentication();
+
 app.UseAuthorization();
 
 app.UseRequestLocalization(((IApplicationBuilder)app).ApplicationServices.GetRequiredService<IOptions<RequestLocalizationOptions>>().Value);
+
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");

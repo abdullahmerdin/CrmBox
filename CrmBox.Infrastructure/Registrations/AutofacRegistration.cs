@@ -1,6 +1,6 @@
 ﻿using Autofac;
-using CrmBox.Application.Interfaces;
-using CrmBox.Application.Services;
+using CrmBox.Application.Interfaces.Customer;
+using CrmBox.Application.Services.Customer;
 
 namespace CrmBox.Infrastructure.Registrations;
 

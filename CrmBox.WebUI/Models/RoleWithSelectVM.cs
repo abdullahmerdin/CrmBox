@@ -7,7 +7,7 @@ namespace CrmBox.WebUI.Models
     {
         public int Id { get; set; }
         public string Name { get; set; }
-        public bool IsSelected { get; set; }     
-        public List<AppRole> Roles { get; set; }
+        public bool IsSelected { get; set; }
+        public IList<Claim> Claims { get; set; }
     }
 }

@@ -1,7 +1,7 @@
 ﻿using CrmBox.Infrastructure.MiddleLayers;
 using Microsoft.AspNetCore.Builder;
 
-namespace CrmBox.Infrastructure.Extensions;
+namespace CrmBox.Infrastructure.Extensions.ExceptionHandler;
 
 public static class ExceptionHandlerExtension
 {

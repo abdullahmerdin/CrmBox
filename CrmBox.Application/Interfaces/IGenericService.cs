@@ -1,10 +1,10 @@
 ﻿using System.Linq.Expressions;
-using CrmBox.Core.Domain;
+using CrmBox.Core.Domain.Base;
 
 namespace CrmBox.Application.Interfaces;
 
 
-    public interface IGenericService<TEntity>
+public interface IGenericService<TEntity>
         where TEntity : BaseEntity
     {
         Task AddAsync(TEntity entity);

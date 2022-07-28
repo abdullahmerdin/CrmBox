@@ -1,4 +1,6 @@
-﻿namespace CrmBox.Core.Domain;
+﻿using CrmBox.Core.Domain.Base;
+
+namespace CrmBox.Core.Domain;
 
 public class Customer : BaseEntity
 {
@@ -9,4 +11,5 @@ public class Customer : BaseEntity
     public string Address { get; set; }
     public string CompanyName { get; set; }
     public string JobTitle { get; set; }
+    public DateTime BirthDate { get; set; }
 }

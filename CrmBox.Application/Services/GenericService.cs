@@ -1,12 +1,12 @@
 ﻿using System.Linq.Expressions;
 using CrmBox.Application.Interfaces;
-using CrmBox.Core.Domain;
+using CrmBox.Core.Domain.Base;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 
 namespace CrmBox.Application.Services;
 
-  public class GenericService<TEntity, TContext> : IGenericService<TEntity>
+public class GenericService<TEntity, TContext> : IGenericService<TEntity>
         where TEntity : BaseEntity
         where TContext : DbContext
     {

@@ -1,10 +1,18 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using CrmBox.Core.Domain.Identity;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 
 namespace CrmBox.WebUI.Controllers
 {
     public class AdminsController : Controller
     {
-        
+        readonly UserManager<AppUser> _userManager;
+
+        public AdminsController(UserManager<AppUser> userManager)
+        {
+            _userManager = userManager;
+        }
+
         public IActionResult GetAll()
         {
             return View();

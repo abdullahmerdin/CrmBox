@@ -1,4 +1,4 @@
-﻿namespace CrmBox.Core.Domain;
+﻿namespace CrmBox.Core.Domain.Base;
 
 public class BaseEntity
 {

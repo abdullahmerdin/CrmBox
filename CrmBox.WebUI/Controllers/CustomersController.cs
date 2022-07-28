@@ -1,6 +1,9 @@
-﻿using CrmBox.Application.Interfaces;
+﻿using CrmBox.Application.Interfaces.Customer;
 using CrmBox.Core.Domain;
+using CrmBox.Core.Domain.Identity;
 using CrmBox.WebUI.Models;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CrmBox.WebUI.Controllers
@@ -15,21 +18,23 @@ namespace CrmBox.WebUI.Controllers
         }
 
         [HttpGet]
-     
-        public IActionResult GetAll()
+        [Authorize(Policy = "GetAllCustomers")]
+        public IActionResult GetAllCustomers()
         {
             var result = _customerService.GetAll();
             return View(result);
         }
 
         [HttpGet]
-        public IActionResult Add()
+        [Authorize(Policy = "AddCustomer")]
+        public IActionResult AddCustomer()
         {
             return View();
         }
 
         [HttpPost]
-        public async Task<IActionResult> Add(AddCustomerVM model)
+        [Authorize(Policy = "AddCustomer")]
+        public async Task<IActionResult> AddCustomer(AddCustomerVM model)
         {
             if (ModelState.IsValid)
             {
@@ -51,8 +56,8 @@ namespace CrmBox.WebUI.Controllers
         }
 
         [HttpGet]
-       
-        public IActionResult Update(int id)
+        [Authorize(Policy = "UpdateCustomer")]
+        public IActionResult UpdateCustomer(int id)
         {
             Customer? customer = _customerService.Get(x => x.Id == id);
             if (customer != null)
@@ -62,7 +67,8 @@ namespace CrmBox.WebUI.Controllers
         }
 
         [HttpPost]
-        public IActionResult Update(Customer model)
+        [Authorize(Policy = "UpdateCustomer")]
+        public IActionResult UpdateCustomer(Customer model)
         {
             if (ModelState.IsValid)
             {
@@ -73,8 +79,8 @@ namespace CrmBox.WebUI.Controllers
         }
 
         [HttpGet]
-     
-        public async Task<IActionResult> Delete(int id)
+        [Authorize(Policy = "DeleteCustomer")]
+        public async Task<IActionResult> DeleteCustomer(int id)
         {
             await _customerService.DeleteAsync(id);
             return RedirectToAction("GetAll");

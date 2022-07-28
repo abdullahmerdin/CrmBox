@@ -1,36 +1,44 @@
 ﻿using CrmBox.Core.Domain.Identity;
+using CrmBox.Infrastructure.Extensions.CustomClaimType;
 using CrmBox.WebUI.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace CrmBox.WebUI.Controllers
 {
-    public class AppRolesController : Controller
+    public class AppRolesController : AuthController
     {
         readonly UserManager<AppUser> _userManager;
         readonly RoleManager<AppRole> _roleManager;
 
-        public AppRolesController(UserManager<AppUser> userManager, RoleManager<AppRole> roleManager)
+        public AppRolesController(UserManager<AppUser> userManager, RoleManager<AppRole> roleManager) : base(userManager)
         {
             _userManager = userManager;
             _roleManager = roleManager;
         }
 
         [HttpGet]
-        public IActionResult GetAll()
+        [Authorize(Policy = "GetAllUserRoles")]
+        public IActionResult GetAllUserRoles()
         {
             var roles = _roleManager.Roles.ToList();
             return View(roles);
         }
 
         [HttpGet]
-        public IActionResult Add()
+        [Authorize(Policy = "AddUserRole")]
+        public IActionResult AddUserRole()
         {
-            return View();
+            AddRoleVM model = new();
+            model.Policies =  Infrastructure.Extensions.Policies.PolicyTypes.Policies.Select(x => new PolicyWithIsSelectedVM { Policy = x, IsSelected = false }).ToList();
+            return View(model);
         }
 
         [HttpPost]
-        public async Task<IActionResult> Add(AddRoleVM model)
+        [Authorize(Policy = "AddUserRole")]
+        public async Task<IActionResult> AddUserRole(AddRoleVM model)
         {
             if (ModelState.IsValid)
             {
@@ -43,6 +51,10 @@ namespace CrmBox.WebUI.Controllers
 
                 if (result.Succeeded)
                 {
+                    foreach (var policy in model.Policies.Where(x => x.IsSelected))
+                    {
+                        await _roleManager.AddClaimAsync(role, new Claim(CustomClaimTypes.Permission, policy.Policy));
+                    }
                     return RedirectToAction("GetAll");
                 }
                 foreach (var item in result.Errors)
@@ -54,7 +66,8 @@ namespace CrmBox.WebUI.Controllers
         }
 
         [HttpGet]
-        public IActionResult Update(int id)
+        [Authorize(Policy = "UpdateUserRole")]
+        public IActionResult UpdateUserRole(int id)
         {
             var values = _roleManager.Roles.FirstOrDefault(x => x.Id == id);
 
@@ -68,7 +81,8 @@ namespace CrmBox.WebUI.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Update(UpdateRoleVM model)
+        [Authorize(Policy = "UpdateUserRole")]
+        public async Task<IActionResult> UpdateUserRole(UpdateRoleVM model)
         {
             var values = _roleManager.Roles.Where(x => x.Id == model.Id).FirstOrDefault();
 
@@ -82,7 +96,9 @@ namespace CrmBox.WebUI.Controllers
             }
             return View();
         }
-        public async Task<IActionResult> Delete(int id)
+
+        [Authorize(Policy = "DeleteUserRole")]
+        public async Task<IActionResult> DeleteUserRole(int id)
         {
             var values = _roleManager.Roles.FirstOrDefault(x => x.Id == id);
             var result = await _roleManager.DeleteAsync(values);
@@ -94,7 +110,8 @@ namespace CrmBox.WebUI.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> AssignRole(int userId)
+        [Authorize(Policy = "AssignUserRole")]
+        public async Task<IActionResult> AssignUserRole(int userId)
         {
             var user = _userManager.Users.FirstOrDefault(x => x.Id == userId);
             var roles = _roleManager.Roles.ToList();
@@ -117,7 +134,8 @@ namespace CrmBox.WebUI.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> AssignRole(List<AssignRoleVM> model)
+        [Authorize(Policy = "AssignUserRole")]
+        public async Task<IActionResult> AssignUserRole(List<AssignRoleVM> model)
         {
             var userId = (int)TempData["UserId"];
             var user = _userManager.Users.FirstOrDefault(x => x.Id == userId);
@@ -133,7 +151,7 @@ namespace CrmBox.WebUI.Controllers
                     await _userManager.RemoveFromRoleAsync(user, item.Name);
                 }
             }
-            return RedirectToAction("GetAll");
+            return RedirectToAction("UserRoleList");
         }
     }
 }
